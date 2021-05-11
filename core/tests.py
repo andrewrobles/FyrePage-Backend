@@ -127,3 +127,35 @@ class LinksTestCase(APITestCase):
         links = Link.objects.all()
 
         self.assertEqual(len(links), 0)
+
+    def test_put_links(self):
+        url = 'http://localhost:8000/core/links/'
+        link_text = 'my link text'
+        link_url = 'my link url'
+
+        user = User.objects.get(username=self.username)
+        link = Link.objects.create(
+            user=user,
+            text=link_text,
+            url=link_url
+        )
+
+        changed_link_text = 'my changed link text'
+        changed_link_url = 'my changed link url'
+
+        self.client.put(url, {
+            'id': link.id,
+            'text': changed_link_text,
+            'url': changed_link_url
+        })
+
+        response = self.client.get(url)
+
+        actual_data = response.data
+        expected_data = {
+            'id': link.id,
+            'text': changed_link_text,
+            'url': changed_link_url
+        }
+
+        self.assertEqual(actual_data, expected_data)
