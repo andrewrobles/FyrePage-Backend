@@ -72,7 +72,7 @@ class LinksTestCase(APITestCase):
     
 
     def test_post_link(self):
-        url = 'http://localhost:8000/token-auth/'
+        url = 'http://localhost:8000/core/links/'
         data = {
             'text': 'my link text',
             'url': 'my link url'
@@ -82,7 +82,7 @@ class LinksTestCase(APITestCase):
 
         self.assertEqual(response.status_code, 201)
 
-        user = response.user
+        user = User.objects.get(username=self.username)
         links = Link.objects.filter(user=user)
 
         self.assertEqual(len(links), 1)

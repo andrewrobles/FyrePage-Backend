@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from .serializers import UserSerializer, UserSerializerWithToken
 
+from .models import Link
+
 
 @api_view(['GET'])
 def current_user(request):
@@ -15,6 +17,20 @@ def current_user(request):
 
     serializer = UserSerializer(request.user)
     return Response(serializer.data)
+
+@api_view(['POST'])
+def links(request):
+    data = {}
+    status_code = 201
+
+    user = request.user
+    link = Link.objects.create(
+        user=user,
+        text=request.data['text'],
+        url=request.data['url']
+    )
+
+    return Response(data, status_code)
 
 
 class UserList(APIView):
