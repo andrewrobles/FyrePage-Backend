@@ -91,3 +91,30 @@ class LinksTestCase(APITestCase):
 
         self.assertEqual(link.text, data['text'])
         self.assertEqual(link.url, data['url'])
+
+    def test_get_links(self):
+        link_text = 'my link text'
+        link_url = 'my link url'
+
+        user = User.objects.get(username=self.username)
+        link = Link.objects.create(
+            user=user,
+            text=link_text,
+            url=link_url
+        )
+
+        url = 'http://localhost:8000/core/links/'
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+
+        actual_data = response.data
+        expected_data = {
+            'id': link.id,
+            'text': link_text,
+            'url': link_url
+        }
+
+        self.assertEqual(actual_data, expected_data)
+
+
