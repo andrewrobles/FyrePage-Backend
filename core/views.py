@@ -18,7 +18,7 @@ def current_user(request):
     serializer = UserSerializer(request.user)
     return Response(serializer.data)
 
-@api_view(['POST', 'GET', 'DELETE'])
+@api_view(['POST', 'GET', 'DELETE', 'PUT'])
 def links(request):
     if request.method=='POST':
         data = {}
@@ -59,6 +59,14 @@ def links(request):
         Link.objects.get(id=link_id).delete()
 
         return Response({}, status_code)
+
+    elif request.method=='PUT':
+        link = Link.objects.get(id=request.data['id'])
+        link.text = request.data['text']
+        link.url=request.data['url']
+        link.save()
+
+        return Response()
 
 
 
