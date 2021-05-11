@@ -2,6 +2,9 @@ from django.test import TestCase
 
 from rest_framework.test import APITestCase
 
+from django.contrib.auth.models import User
+from .models import Link
+
 class AuthTestCase(APITestCase):
 
     def setUp(self):
@@ -50,4 +53,41 @@ class AuthTestCase(APITestCase):
         self.assertTrue('token' in response.data)
 
 
-        
+class LinksTestCase(APITestCase):
+
+    def setUp(self):
+        self.username = 'fyre'
+        self.password = '4321'
+
+        self.response = self.client.post(
+            'http://localhost:8000/core/users/', 
+            {
+                'username': self.username,
+                'password': self.password
+            }
+        )
+
+        self.token = self.response.data['token']
+        self.client.credentials(HTTP_AUTHORIZATION='JWT {}'.format(self.token))
+    
+
+    def test_post_link(self):
+        url = 'http://localhost:8000/token-auth/'
+        data = {
+            'text': 'my link text',
+            'url': 'my link url'
+        }
+
+        response = self.clent.post(url, data)
+
+        self.assertEqual(response.status_code, 201)
+
+        user = response.user
+        links = Link.objects.filter(user=user)
+
+        self.assertEqual(len(links), 1)
+
+        link = links.first()
+
+        self.assertEqual(link.text, data['text'])
+        self.assertEqual(link.url, data['url'])
