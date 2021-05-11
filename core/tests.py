@@ -78,7 +78,7 @@ class LinksTestCase(APITestCase):
             'url': 'my link url'
         }
 
-        response = self.clent.post(url, data)
+        response = self.client.post(url, data)
 
         self.assertEqual(response.status_code, 201)
 
