@@ -18,19 +18,41 @@ def current_user(request):
     serializer = UserSerializer(request.user)
     return Response(serializer.data)
 
-@api_view(['POST'])
+@api_view(['POST', 'GET'])
 def links(request):
-    data = {}
-    status_code = 201
+    if request.method=='POST':
+        data = {}
+        status_code = 201
 
-    user = request.user
-    link = Link.objects.create(
-        user=user,
-        text=request.data['text'],
-        url=request.data['url']
-    )
+        user = request.user
+        link = Link.objects.create(
+            user=user,
+            text=request.data['text'],
+            url=request.data['url']
+        )
 
-    return Response(data, status_code)
+        return Response(data, status_code)
+    elif request.method=='GET':
+        status_code = 200
+
+        user_links = Link.objects.filter(user=request.user)
+
+        data = {'links': []}
+    
+        for link_model in user_links:
+            link = {
+                'id': link_model.id,
+                'text': link_model.text,
+                'url': link_model.url
+            }
+
+            data['links'].append(link)
+
+        return Response(data, status_code)
+
+
+
+
 
 
 class UserList(APIView):

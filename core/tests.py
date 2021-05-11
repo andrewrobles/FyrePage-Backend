@@ -110,11 +110,12 @@ class LinksTestCase(APITestCase):
 
         actual_data = response.data
         expected_data = {
-            'id': link.id,
-            'text': link_text,
-            'url': link_url
+            'links': [{
+                'id': link.id,
+                'text': link_text,
+                'url': link_url
+            }]
         }
-
         self.assertEqual(actual_data, expected_data)
 
 
