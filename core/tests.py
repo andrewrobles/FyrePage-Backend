@@ -124,6 +124,6 @@ class LinksTestCase(APITestCase):
 
         self.assertEqual(response.status_code, 200)
 
-        links = Links.objects.all()
+        links = Link.objects.all()
 
         self.assertEqual(len(links), 0)
