@@ -29,7 +29,7 @@ class AuthTestCase(APITestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['username'], self.username)
-    
+
     def test_current_user_not_signed_in(self):
         response = self.client.get('http://localhost:8000/core/current_user/')
 
