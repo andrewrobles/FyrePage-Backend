@@ -118,4 +118,12 @@ class LinksTestCase(APITestCase):
         }
         self.assertEqual(actual_data, expected_data)
 
+        response = self.client.delete(url, {
+            'id': link.id
+        })
 
+        self.assertEqual(response.status_code, 200)
+
+        links = Links.objects.all()
+
+        self.assertEqual(len(links), 0)
